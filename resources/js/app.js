@@ -7,20 +7,27 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
+// Imports
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Vuex from 'vuex';
+import {routes} from './routes'
+import StoreData from './store/store';
+import MainApp from './components/MainApp.vue';
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+// Adding to vue to use
+Vue.use(VueRouter);
+Vue.use(Vuex);
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
+// Create the store (Vuex)
+const store = new Vuex.Store(StoreData);
+
+//Create the router
+const router = new VueRouter({
+    routes, // All routes defined in 'routes.js' file
+    mode: 'history' // to use History API
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,5 +36,10 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
  */
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    router,
+    store,
+    components: {
+        'main-app': MainApp
+    }
 });
